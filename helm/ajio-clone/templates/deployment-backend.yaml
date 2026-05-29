@@ -32,8 +32,10 @@ spec:
             - name: {{ $k }}
               value: "{{ $v }}"
             {{- end }}
+          {{- if .Values.backend.resources }}
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
+          {{- end }}
           {{- if .Values.config.create }}
           volumeMounts:
             - name: ajio-config

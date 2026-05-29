@@ -27,8 +27,10 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.service.port }}
+          {{- if .Values.frontend.resources }}
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
+          {{- end }}
           {{- if .Values.config.create }}
           volumeMounts:
             - name: ajio-config
