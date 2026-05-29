@@ -394,6 +394,7 @@ products = [
 cart = []
 
 @app.route('/products')
+@app.route('/api/products')
 def get_products():
     category = request.args.get('category')
     if category:
@@ -402,6 +403,7 @@ def get_products():
     return jsonify(products)
 
 @app.route('/products/<int:product_id>')
+@app.route('/api/products/<int:product_id>')
 def get_product(product_id):
     item = next((product for product in products if product['id'] == product_id), None)
     if not item:
@@ -409,15 +411,18 @@ def get_product(product_id):
     return jsonify(item)
 
 @app.route('/categories')
+@app.route('/api/categories')
 def get_categories():
     categories = sorted({product['category'] for product in products})
     return jsonify(categories)
 
 @app.route('/cart', methods=['GET'])
+@app.route('/api/cart', methods=['GET'])
 def get_cart():
     return jsonify(cart)
 
 @app.route('/cart', methods=['POST'])
+@app.route('/api/cart', methods=['POST'])
 def add_to_cart():
     data = request.json
     if data:
@@ -425,12 +430,14 @@ def add_to_cart():
     return jsonify({'message': 'Added to cart'})
 
 @app.route('/cart/<int:product_id>', methods=['DELETE'])
+@app.route('/api/cart/<int:product_id>', methods=['DELETE'])
 def delete_cart_item(product_id):
     global cart
     cart = [item for item in cart if item.get('id') != product_id]
     return jsonify({'message': 'Product removed from cart'})
 
 @app.route('/cart/clear', methods=['POST'])
+@app.route('/api/cart/clear', methods=['POST'])
 def clear_cart():
     global cart
     cart = []

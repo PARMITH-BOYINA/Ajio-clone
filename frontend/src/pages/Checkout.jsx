@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const apiBase = 'http://127.0.0.1:5000'
+const apiBase = import.meta.env.VITE_API_BASE || '/api'
 
 function Checkout() {
   const [cart, setCart] = useState([])

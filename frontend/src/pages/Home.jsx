@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 
-const apiBase = 'http://127.0.0.1:5000'
+const apiBase = import.meta.env.VITE_API_BASE || '/api'
 
 function Home() {
   const [products, setProducts] = useState([])
