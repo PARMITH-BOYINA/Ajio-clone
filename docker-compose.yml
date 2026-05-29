@@ -1,0 +1,20 @@
+services:
+  ajio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ajio:1.0.0.0
+    container_name: ajio_container
+    ports:
+      - "4173:4173"
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - FLASK_ENV=production
+    networks:
+      - ajio-network
+    restart: unless-stopped
+
+networks:
+  ajio-network:
+    driver: bridge

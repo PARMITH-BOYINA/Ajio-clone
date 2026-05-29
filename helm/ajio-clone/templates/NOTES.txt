@@ -1,0 +1,11 @@
+Thank you for installing the ajio-clone chart.
+
+To access the frontend:
+{{- if .Values.frontend.enabled }}
+  - Service: {{ include "ajio.fullname" . }}-frontend (type: {{ .Values.frontend.service.type }})
+{{- end }}
+
+To access the backend:
+{{- if .Values.backend.enabled }}
+  - Service: {{ include "ajio.fullname" . }}-backend (type: {{ .Values.backend.service.type }})
+{{- end }}

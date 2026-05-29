@@ -1,0 +1,30 @@
+{{- if .Values.gateway.enabled }}
+{{- $gatewayName := .Values.gateway.gateway.name -}}
+{{- $gatewayNS := .Values.gateway.gateway.namespace -}}
+{{- range $hostIdx, $host := .Values.gateway.hosts }}
+{{- $hostName := $host.host }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "ajio.fullname" $ }}-httproute-{{ $hostIdx }}
+  namespace: {{ $gatewayNS }}
+spec:
+  parentRefs:
+    - name: {{ $gatewayName }}
+  hostnames:
+    - {{ $hostName }}
+  rules:
+    {{- range $pathIdx, $p := $host.paths }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ $p.path }}
+      backendRefs:
+        - backendRef:
+            name: {{ include "ajio.fullname" $ }}-{{ $p.backend }}
+            port: {{- if eq $p.backend "frontend" }}{{ $.Values.frontend.service.port }}{{- else }}{{ $.Values.backend.service.port }}{{- end }}
+          weight: 1
+    {{- end }}
+---
+{{- end }}
+{{- end }}

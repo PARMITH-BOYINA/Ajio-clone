@@ -1,0 +1,101 @@
+# Default values for ajio-clone chart
+
+replicaCount: 2
+
+imagePullSecrets: []
+
+backend:
+  enabled: true
+  image:
+    repository: docker.io/parmith/ajio
+    tag: 1.0.0.0
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  service:
+    type: NodePort
+    port: 5000
+  resources: {}
+  env: {}
+
+frontend:
+  enabled: true
+  image:
+    repository: docker.io/parmith/ajio
+    tag: tag-1.0.0.0
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  service:
+    type: NodePort
+    port: 80
+  resources: {}
+
+serviceAccount:
+  create: false
+  name: ""
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          backend: frontend
+        - path: /api
+          backend: backend
+  tls: []
+
+gateway:
+  # Use Gateway API (Envoy Gateway) instead of Ingress
+  enabled: false
+  # Optionally create a GatewayClass (cluster-scoped). Only set to true if you manage cluster-level resources.
+  createGatewayClass: false
+  gatewayClassName: envoy-gateway-class
+  controllerName: envoy.gateway.networking.k8s.io
+  gateway:
+    name: ajio-envoy-gateway
+    namespace: default
+  listener:
+    name: http
+    port: 80
+    protocol: HTTP
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          backend: frontend
+        - path: /api
+          backend: backend
+  tls: []
+
+nodePort:
+  enabled: true
+  frontend: 30080
+  backend: 30050
+
+secret:
+  create: false
+  data: {}
+
+config:
+  create: false
+  data: {}
+  mountPath: /etc/ajio/config
+  items: []
+  optional: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

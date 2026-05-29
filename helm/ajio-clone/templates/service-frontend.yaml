@@ -1,0 +1,20 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ajio.fullname" . }}-frontend
+  labels:
+    {{ include "ajio.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.frontend.service.type }}
+  selector:
+    app: {{ include "ajio.fullname" . }}-frontend
+  ports:
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.service.port }}
+      protocol: TCP
+      {{- if and (eq .Values.frontend.service.type "NodePort") .Values.nodePort.enabled }}
+      nodePort: {{ .Values.nodePort.frontend }}
+      {{- end }}
+
+{{- end }}
