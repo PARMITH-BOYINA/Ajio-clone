@@ -8,11 +8,11 @@ backend:
   enabled: true
   image:
     repository: parmith/ajio
-    tag: "1.0.0.1"
+    tag: "1.0.0.2"
     pullPolicy: Always
   replicaCount: 2
   service:
-    type: NodePort
+    type: LoadBalancer
     port: 5000
   resources: {}
   env: {}
@@ -21,11 +21,11 @@ frontend:
   enabled: true
   image:
     repository: parmith/ajio
-    tag: "1.0.0.1"
+    tag: "1.0.0.2"
     pullPolicy: Always
   replicaCount: 2
   service:
-    type: NodePort
+    type: LoadBalancer
     port: 4173
   resources: {}
 
@@ -93,11 +93,15 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 podAnnotations: {}
+
 podSecurityContext: {}
+
 securityContext: {}
 
 resources: {}
 
 nodeSelector: {}
+
 tolerations: []
+
 affinity: {}

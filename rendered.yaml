@@ -11,14 +11,13 @@ metadata:
     app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: test-ajio-clone-backend
   ports:
     - port: 5000
       targetPort: 5000
       protocol: TCP
-      nodePort: 30050
 
 ---
 # Source: ajio-clone/templates/service-frontend.yaml
@@ -33,14 +32,13 @@ metadata:
     app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: test-ajio-clone-frontend
   ports:
     - port: 4173
       targetPort: 4173
       protocol: TCP
-      nodePort: 30080
 
 ---
 # Source: ajio-clone/templates/deployment-backend.yaml
@@ -69,8 +67,8 @@ spec:
 
       containers:
         - name: backend
-          image: "ajio:1.0.0.0"
-          imagePullPolicy: IfNotPresent
+          image: "parmith/ajio:1.0.0.2"
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 5000
@@ -102,8 +100,8 @@ spec:
 
       containers:
         - name: frontend
-          image: "ajio:1.0.0.0"
-          imagePullPolicy: IfNotPresent
+          image: "parmith/ajio:1.0.0.2"
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 4173
