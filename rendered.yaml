@@ -1,0 +1,109 @@
+---
+# Source: ajio-clone/templates/service-backend.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-ajio-clone-backend
+  labels:
+        
+    app.kubernetes.io/name: test-ajio-clone
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  selector:
+    app: test-ajio-clone-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      nodePort: 30050
+
+---
+# Source: ajio-clone/templates/service-frontend.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-ajio-clone-frontend
+  labels:
+        
+    app.kubernetes.io/name: test-ajio-clone
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  selector:
+    app: test-ajio-clone-frontend
+  ports:
+    - port: 4173
+      targetPort: 4173
+      protocol: TCP
+      nodePort: 30080
+
+---
+# Source: ajio-clone/templates/deployment-backend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-ajio-clone-backend
+  labels:
+    
+    app.kubernetes.io/name: test-ajio-clone
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-ajio-clone-backend
+  template:
+    metadata:
+      labels:
+        app: test-ajio-clone-backend
+      annotations:
+        {}
+    spec:
+
+      containers:
+        - name: backend
+          image: "ajio:1.0.0.0"
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5000
+
+---
+# Source: ajio-clone/templates/deployment-frontend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-ajio-clone-frontend
+  labels:
+    
+    app.kubernetes.io/name: test-ajio-clone
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-ajio-clone-frontend
+  template:
+    metadata:
+      labels:
+        app: test-ajio-clone-frontend
+      annotations:
+        {}
+    spec:
+
+      containers:
+        - name: frontend
+          image: "ajio:1.0.0.0"
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 4173
