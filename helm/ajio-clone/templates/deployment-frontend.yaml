@@ -21,22 +21,27 @@ spec:
       imagePullSecrets:
         {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       {{- end }}
+
       containers:
         - name: frontend
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
-          imagePullPolicy: "{{ .Values.frontend.image.pullPolicy }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+
           ports:
             - containerPort: {{ .Values.frontend.service.port }}
+
           {{- if .Values.frontend.resources }}
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
           {{- end }}
+
           {{- if .Values.config.create }}
           volumeMounts:
             - name: ajio-config
               mountPath: {{ .Values.config.mountPath }}
               readOnly: true
           {{- end }}
+
       {{- if .Values.config.create }}
       volumes:
         - name: ajio-config
@@ -48,10 +53,20 @@ spec:
               {{- toYaml .Values.config.items | nindent 14 }}
             {{- end }}
       {{- end }}
+
       {{- with .Values.nodeSelector }}
-      nodeSelector: {{ toYaml . | nindent 6 }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
       {{- end }}
-      {{- toYaml .Values.tolerations | indent 6 }}
-      {{- toYaml .Values.affinity | indent 6 }}
+
+      {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
 
 {{- end }}
